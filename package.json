@@ -14,7 +14,8 @@
     "@typegoose/typegoose": "^11.5.0",
     "chai": "^4.3.10",
     "express": "^4.21.1",
-    "mongoose": "^8.8.0"
+    "mongoose": "^8.8.0",
+    "pino": "^9.5.0"
   },
   "devDependencies": {
     "@types/chai": "^4.3.6",
