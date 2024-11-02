@@ -9,7 +9,7 @@ import {
   Ref,
   modelOptions,
 } from "@typegoose/typegoose";
-import lib from "./lib";
+import lib from "../libs/geolib";
 
 import ObjectId = mongoose.Types.ObjectId;
 

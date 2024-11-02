@@ -1,7 +1,7 @@
-import init from "./database";
+import init from "./database/database";
 import server from "./server";
+import pino from "pino";
 
-const pino = require("pino");
 const logger = pino({ level: "info" });
 
 (async () => {
