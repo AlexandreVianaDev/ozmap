@@ -1,23 +1,29 @@
-import 'reflect-metadata';
+import "reflect-metadata";
 
-import * as mongoose from 'mongoose';
-import { TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
-import { pre, getModelForClass, Prop, Ref, modelOptions } from '@typegoose/typegoose';
-import lib from './lib';
+import * as mongoose from "mongoose";
+import { TimeStamps } from "@typegoose/typegoose/lib/defaultClasses";
+import {
+  pre,
+  getModelForClass,
+  Prop,
+  Ref,
+  modelOptions,
+} from "@typegoose/typegoose";
+import lib from "./lib";
 
 import ObjectId = mongoose.Types.ObjectId;
 
 class Base extends TimeStamps {
-  @Prop({ required: true, default: () => (new ObjectId()).toString() })
+  @Prop({ required: true, default: () => new ObjectId().toString() })
   _id: string;
 }
 
-@pre<User>('save', async function (next) {
+@pre<User>("save", async function (next) {
   const region = this as Omit<any, keyof User> & User;
 
-  if (region.isModified('coordinates')) {
+  if (region.isModified("coordinates")) {
     region.address = await lib.getAddressFromCoordinates(region.coordinates);
-  } else if (region.isModified('address')) {
+  } else if (region.isModified("address")) {
     const { lat, lng } = await lib.getCoordinatesFromAddress(region.address);
 
     region.coordinates = [lng, lat];
@@ -42,7 +48,7 @@ export class User extends Base {
   regions: Ref<Region>[];
 }
 
-@pre<Region>('save', async function (next) {
+@pre<Region>("save", async function (next) {
   const region = this as Omit<any, keyof Region> & Region;
 
   if (!region._id) {
