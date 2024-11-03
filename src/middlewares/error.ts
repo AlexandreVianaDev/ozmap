@@ -3,7 +3,16 @@ import { AppError } from "../error";
 import STATUS from "../constants/status";
 
 const pino = require("pino");
-const logger = pino({ level: "info" });
+const logger = pino({
+  level: "info",
+  transport: {
+    target: "pino-pretty",
+    options: {
+      translateTime: "SYS:standard",
+      ignore: "pid,hostname",
+    },
+  },
+});
 
 const errorHandlerMiddleware = (
   err: Error,
@@ -12,7 +21,11 @@ const errorHandlerMiddleware = (
   next: NextFunction,
 ): any | void => {
   if (err instanceof AppError) {
-    return res.status(err.statusCode).json({ message: err.message });
+    return res.status(err.statusCode).json({
+      message: err.message,
+      details: err.details,
+      errorCode: err.errorCode,
+    });
   }
 
   logger.error(err);

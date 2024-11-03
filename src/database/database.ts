@@ -1,7 +1,16 @@
 import mongoose from "mongoose";
 
 const pino = require("pino");
-const logger = pino({ level: "info" });
+const logger = pino({
+  level: "info",
+  transport: {
+    target: "pino-pretty",
+    options: {
+      translateTime: "SYS:standard",
+      ignore: "pid,hostname",
+    },
+  },
+});
 
 const env = {
   MONGO_URI:

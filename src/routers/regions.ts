@@ -2,22 +2,39 @@ import * as app from "express";
 import RegionsControllers from "../controllers/regions";
 import UsersMiddlewares from "../middlewares/users";
 import RegionsMiddlewares from "../middlewares/regions";
+import RequestsMiddlewares from "../middlewares/requests";
+import {
+  regionCreateSchema,
+  regionGetNearSchema,
+  regionGetSchema,
+} from "../schemas/regions";
 
 const regionsRouters = app.Router();
 const regionsControllers = new RegionsControllers();
 const regionsMiddlewares = new RegionsMiddlewares();
 const usersMiddlewares = new UsersMiddlewares();
+const requestMiddlewares = new RequestsMiddlewares();
 
-regionsRouters.get("/regions", regionsControllers.getRegions);
-regionsRouters.get("/regions/near", regionsControllers.getRegionsNear);
+regionsRouters.get(
+  "/regions",
+  requestMiddlewares.validateQueryParamsMiddleware(regionGetSchema),
+  regionsControllers.getRegions,
+);
+regionsRouters.get(
+  "/regions/near",
+  requestMiddlewares.validateQueryParamsMiddleware(regionGetNearSchema),
+  regionsControllers.getRegionsNear,
+);
 
 regionsRouters.post(
   "/regions",
+  requestMiddlewares.validateBodyMiddleware(regionCreateSchema),
   usersMiddlewares.userExists,
   regionsControllers.createRegion,
 );
 regionsRouters.put(
   "/regions/:id",
+  requestMiddlewares.validateBodyMiddleware(regionCreateSchema),
   usersMiddlewares.userExists,
   regionsMiddlewares.regionExists,
   regionsControllers.updateRegion,
