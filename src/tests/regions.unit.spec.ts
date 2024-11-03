@@ -14,7 +14,7 @@ import init from "../database/database";
 import STATUS from "../constants/status";
 import generateCoordinate from "./builders/coordinates";
 
-describe("Regions", function () {
+describe("Region Unit Tests", function () {
   let user;
   let region;
   let session;
@@ -113,78 +113,6 @@ describe("Regions", function () {
 
         expect(userRecord).to.deep.eq(updatedUserRecord);
       }
-    });
-  });
-
-  describe("RegionIntegration", () => {
-    it("should create a region", async () => {
-      const firstPoint = generateCoordinate();
-
-      const body = {
-        create: {
-          user: user._id,
-          name: "Region 1",
-          coordinates: {
-            type: "Polygon",
-            coordinates: [
-              [
-                firstPoint,
-                generateCoordinate(),
-                generateCoordinate(),
-                firstPoint,
-              ],
-            ],
-          },
-        },
-      };
-
-      const response = await supertest(server).post(`/regions`).send(body);
-
-      expect(response).to.have.property("status", STATUS.CREATED);
-    });
-
-    it("should return a list of regions", async () => {
-      const lng = region.coordinates.coordinates[0][0][0];
-      const lat = region.coordinates.coordinates[0][0][1];
-
-      const response = await supertest(server).get(
-        `/regions?lng=${lng}&lat=${lat}`,
-      );
-
-      expect(response).to.have.property("status", STATUS.OK);
-    });
-
-    it("should update a region", async () => {
-      const firstPoint = generateCoordinate();
-      const body = {
-        update: {
-          user: user._id,
-          name: "Region 1",
-          coordinates: {
-            type: "Polygon",
-            coordinates: [
-              [
-                firstPoint,
-                generateCoordinate(),
-                generateCoordinate(),
-                firstPoint,
-              ],
-            ],
-          },
-        },
-      };
-
-      const response = await supertest(server)
-        .put(`/regions/${region._id}`)
-        .send(body);
-
-      expect(response).to.have.property("status", STATUS.UPDATED);
-    });
-
-    it("should delete a region", async () => {
-      const response = await supertest(server).delete(`/regions/${region._id}`);
-
-      expect(response).to.have.property("status", STATUS.OK);
     });
   });
 });

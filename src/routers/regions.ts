@@ -7,6 +7,7 @@ import {
   regionCreateSchema,
   regionGetNearSchema,
   regionGetSchema,
+  regionUpdateSchema,
 } from "../schemas/regions";
 
 const regionsRouters = app.Router();
@@ -34,7 +35,7 @@ regionsRouters.post(
 );
 regionsRouters.put(
   "/regions/:id",
-  requestMiddlewares.validateBodyMiddleware(regionCreateSchema),
+  requestMiddlewares.validateBodyMiddleware(regionUpdateSchema),
   usersMiddlewares.userExists,
   regionsMiddlewares.regionExists,
   regionsControllers.updateRegion,

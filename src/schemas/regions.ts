@@ -12,7 +12,7 @@ export const regionCreateSchema = z.object({
 });
 
 export const regionUpdateSchema = z.object({
-  create: z.object({
+  update: z.object({
     name: z.string(),
     user: z.string(),
     coordinates: z.object({
