@@ -13,7 +13,7 @@ import server from "../server";
 import init from "../database/database";
 import STATUS from "../constants/status";
 
-describe("Users", function () {
+describe("Users Tests", function () {
   let user;
   let session;
   let geoLibStub: Partial<typeof GeoLib> = {};
@@ -57,21 +57,23 @@ describe("Users", function () {
     session.commitTransaction();
   });
 
-  describe("UserModel", () => {
-    it("should create a user", async () => {
-      const userData: Omit<User, "_id" | "coordinates"> = {
-        name: faker.person.fullName(),
-        email: faker.internet.email(),
-        address: faker.location.streetAddress({ useFullAddress: true }),
-        regions: [],
-      };
-      const user = await UserModel.create(userData);
+  describe("User Unit", () => {
+    describe("UserModel", () => {
+      it("should create a user", async () => {
+        const userData: Omit<User, "_id" | "coordinates"> = {
+          name: faker.person.fullName(),
+          email: faker.internet.email(),
+          address: faker.location.streetAddress({ useFullAddress: true }),
+          regions: [],
+        };
+        const user = await UserModel.create(userData);
 
-      expect(user).to.deep.include(userData);
+        expect(user).to.deep.include(userData);
+      });
     });
   });
 
-  describe("UserIntegration", () => {
+  describe("User Integration", () => {
     it("should create a user", async () => {
       const body = {
         create: {
