@@ -12,10 +12,13 @@
   "dependencies": {
     "@faker-js/faker": "^8.1.0",
     "@typegoose/typegoose": "^11.5.0",
+    "axios": "^1.7.7",
     "chai": "^4.3.10",
     "express": "^4.21.1",
+    "express-async-errors": "^3.1.1",
     "mongoose": "^8.8.0",
-    "pino": "^9.5.0"
+    "pino": "^9.5.0",
+    "reflect-metadata": "^0.2.2"
   },
   "devDependencies": {
     "@types/chai": "^4.3.6",

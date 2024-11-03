@@ -1,12 +1,12 @@
 import mongoose from "mongoose";
 
+const pino = require("pino");
+const logger = pino({ level: "info" });
+
 const env = {
   MONGO_URI:
     "mongodb://root:example@127.0.0.1:27021/oz-tech-test?authSource=admin",
 };
-
-const pino = require("pino");
-const logger = pino({ level: "info" });
 
 const init = async function () {
   try {

@@ -1,54 +1,36 @@
 import * as app from "express";
-import { UserModel } from "../models/models";
-import STATUS from "../constants/status";
+import UsersControllers from "../controllers/users";
+import UsersMiddlewares from "../middlewares/users";
 
 const userRouters = app.Router();
+const usersControllers = new UsersControllers();
+const usersMiddlewares = new UsersMiddlewares();
 
-userRouters.get("/user", async (req, res) => {
-  const { page, limit } = req.query;
+userRouters.get("/users", usersControllers.getUsers);
 
-  const [users, total] = await Promise.all([
-    UserModel.find().lean(),
-    UserModel.count(),
-  ]);
+userRouters.get(
+  "/users/:id",
+  usersMiddlewares.userExists,
+  usersControllers.getUser,
+);
 
-  return res.json({
-    rows: users,
-    page,
-    limit,
-    total,
-  });
-});
+userRouters.post(
+  "/users",
+  usersMiddlewares.userAddressOrCoordinates,
+  usersControllers.createUser,
+);
 
-userRouters.get("/users/:id", async (req, res) => {
-  const { id } = req.params;
+userRouters.put(
+  "/users/:id",
+  usersMiddlewares.userExists,
+  usersMiddlewares.userAddressOrCoordinates,
+  usersControllers.updateUser,
+);
 
-  const user = await UserModel.findOne({ _id: id }).lean();
-
-  if (!user) {
-    res
-      .status(STATUS.INTERNAL_SERVER_ERROR)
-      .json({ message: "Region not found" });
-  }
-
-  return user;
-});
-
-userRouters.put("/users/:id", async (req, res) => {
-  const { id } = req.params;
-  const { update } = req.body;
-
-  const user = await UserModel.findOne({ _id: id }).lean();
-
-  if (!user) {
-    res.status(STATUS.DEFAULT_ERROR).json({ message: "Region not found" });
-  }
-
-  user.name = update.name;
-
-  await user.save();
-
-  return res.sendStatus(201);
-});
+userRouters.delete(
+  "/users/:id",
+  usersMiddlewares.userExists,
+  usersControllers.deleteUser,
+);
 
 export default userRouters;

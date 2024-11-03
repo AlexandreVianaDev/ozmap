@@ -1,5 +1,4 @@
 import "reflect-metadata";
-
 import * as mongoose from "mongoose";
 import { TimeStamps } from "@typegoose/typegoose/lib/defaultClasses";
 import {
@@ -10,7 +9,6 @@ import {
   modelOptions,
 } from "@typegoose/typegoose";
 import lib from "../libs/geolib";
-
 import ObjectId = mongoose.Types.ObjectId;
 
 class Base extends TimeStamps {
@@ -25,7 +23,6 @@ class Base extends TimeStamps {
     region.address = await lib.getAddressFromCoordinates(region.coordinates);
   } else if (region.isModified("address")) {
     const { lat, lng } = await lib.getCoordinatesFromAddress(region.address);
-
     region.coordinates = [lng, lat];
   }
 
@@ -46,6 +43,11 @@ export class User extends Base {
 
   @Prop({ required: true, default: [], ref: () => Region, type: () => String })
   regions: Ref<Region>[];
+
+  public static async count(): Promise<number> {
+    const UserModel = getModelForClass(User);
+    return UserModel.countDocuments();
+  }
 }
 
 @pre<Region>("save", async function (next) {
