@@ -9,7 +9,35 @@ class UsersMiddlewares {
     res: Response,
     next: NextFunction,
   ): Promise<any> => {
-    const { id } = req.params;
+    let id: string;
+
+    const domain = req.url.split("/")[1];
+
+    if (domain == "users") {
+      const methodsWithUserAsParams = ["GET", "DELETE", "PUT"];
+      if (methodsWithUserAsParams.includes(req.method)) {
+        id = req.params.id;
+      }
+
+      if (req.method == "POST") {
+        id = req.body.create.user;
+      }
+    }
+
+    if (domain !== "users") {
+      const methodsWithUserAsParams = ["GET", "DELETE"];
+      if (methodsWithUserAsParams.includes(req.method)) {
+        id = req.params.id;
+      }
+
+      if (req.method == "POST") {
+        id = req.body.create.user;
+      }
+
+      if (req.method == "PUT") {
+        id = req.body.update.user;
+      }
+    }
 
     const user = await UserModel.findOne({ _id: id });
 

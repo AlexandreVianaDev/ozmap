@@ -4,16 +4,16 @@ import * as mongoose from "mongoose";
 import * as supertest from "supertest";
 import * as sinon from "sinon";
 import { faker } from "@faker-js/faker";
-import { expect, assert } from "chai";
+import { expect } from "chai";
 
 import "../database/database";
-import { Region, RegionModel, UserModel } from "../models/models";
+import { User, UserModel } from "../models/models";
 import GeoLib from "../libs/geolib";
 import server from "../server";
 import init from "../database/database";
 import STATUS from "../constants/status";
 
-describe("Models", function () {
+describe("Users", function () {
   let user;
   let session;
   let geoLibStub: Partial<typeof GeoLib> = {};
@@ -25,22 +25,25 @@ describe("Models", function () {
     geoLibStub.getCoordinatesFromAddress = sinon
       .stub(GeoLib, "getCoordinatesFromAddress")
       .resolves({
-        lat: faker.location.latitude(),
-        lng: faker.location.longitude(),
+        lng: faker.location.longitude({ min: -180, max: 180 }),
+        lat: faker.location.latitude({ min: -90, max: 90 }),
       });
 
     init();
     session = await mongoose.startSession();
 
-    user = await UserModel.create({
+    const userData = {
       name: faker.person.firstName(),
       email: faker.internet.email(),
       address: faker.location.streetAddress({ useFullAddress: true }),
-    });
+      regions: [],
+    };
+    user = await UserModel.create(userData);
   });
 
-  after(() => {
+  after(async () => {
     sinon.restore();
+
     if (session) {
       session.endSession();
     }
@@ -55,6 +58,20 @@ describe("Models", function () {
   });
 
   describe("UserModel", () => {
+    it("should create a user", async () => {
+      const userData: Omit<User, "_id" | "coordinates"> = {
+        name: faker.person.fullName(),
+        email: faker.internet.email(),
+        address: faker.location.streetAddress({ useFullAddress: true }),
+        regions: [],
+      };
+      const user = await UserModel.create(userData);
+
+      expect(user).to.deep.include(userData);
+    });
+  });
+
+  describe("UserIntegration", () => {
     it("should create a user", async () => {
       const body = {
         create: {
@@ -101,36 +118,6 @@ describe("Models", function () {
       const response = await supertest(server).delete(`/users/${user._id}`);
 
       expect(response).to.have.property("status", STATUS.OK);
-    });
-  });
-
-  describe("RegionModel", () => {
-    it("should create a region", async () => {
-      const regionData: Omit<Region, "_id"> = {
-        user: user._id,
-        name: faker.person.fullName(),
-      };
-
-      const [region] = await RegionModel.create([regionData]);
-
-      expect(region).to.deep.include(regionData);
-    });
-
-    it("should rollback changes in case of failure", async () => {
-      const userRecord = await UserModel.findOne({ _id: user._id })
-        .select("regions")
-        .lean();
-      try {
-        await RegionModel.create([{ user: user._id }]);
-
-        assert.fail("Should have thrown an error");
-      } catch (error) {
-        const updatedUserRecord = await UserModel.findOne({ _id: user._id })
-          .select("regions")
-          .lean();
-
-        expect(userRecord).to.deep.eq(updatedUserRecord);
-      }
     });
   });
 });

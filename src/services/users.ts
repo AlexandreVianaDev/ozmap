@@ -1,23 +1,20 @@
-import { Request } from "express";
 import { UserModel } from "../models/models";
 import { IGetUsers, IUser } from "../interfaces/users";
 
 class UsersServices {
-  public getUsers = async (req: Request): Promise<IGetUsers> => {
-    const { page, limit } = req.query;
-
-    const pageValue = page as string | undefined;
-    const limitValue = limit as string | undefined;
-
+  public getUsers = async (page: string, limit: string): Promise<IGetUsers> => {
     const [users, total] = await Promise.all([
-      UserModel.find().lean(),
+      UserModel.find()
+        .lean()
+        .skip(parseFloat(page) - 1)
+        .limit(parseFloat(limit)),
       UserModel.count(),
     ]);
 
     return {
       rows: users,
-      pageValue,
-      limitValue,
+      page,
+      limit,
       total,
     };
   };
@@ -44,7 +41,7 @@ class UsersServices {
 
   public createUser = async (create: IUser) => {
     const user = new UserModel(create);
-    const savedUser = user.save();
+    const savedUser = await user.save();
     return savedUser;
   };
 

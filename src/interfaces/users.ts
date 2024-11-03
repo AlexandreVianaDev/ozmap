@@ -7,7 +7,7 @@ export interface IUser {
 
 export interface IGetUsers {
   rows: IUser[];
-  pageValue: string | undefined;
-  limitValue: string | undefined;
+  page: string | undefined;
+  limit: string | undefined;
   total: number;
 }

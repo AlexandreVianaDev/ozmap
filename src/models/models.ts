@@ -7,6 +7,7 @@ import {
   Prop,
   Ref,
   modelOptions,
+  index,
 } from "@typegoose/typegoose";
 import lib from "../libs/geolib";
 import ObjectId = mongoose.Types.ObjectId;
@@ -50,6 +51,7 @@ export class User extends Base {
   }
 }
 
+@index({ coordinates: "2dsphere" })
 @pre<Region>("save", async function (next) {
   const region = this as Omit<any, keyof Region> & Region;
 
@@ -59,6 +61,11 @@ export class User extends Base {
 
   if (region.isNew) {
     const user = await UserModel.findOne({ _id: region.user });
+
+    if (!user.regions) {
+      user.regions = [];
+    }
+
     user.regions.push(region._id);
     await user.save({ session: region.$session() });
   }
@@ -75,6 +82,14 @@ export class Region extends Base {
 
   @Prop({ ref: () => User, required: true, type: () => String })
   user: Ref<User>;
+
+  @Prop({
+    required: true,
+  })
+  coordinates: {
+    type: string;
+    coordinates: number[][][];
+  };
 }
 
 export const UserModel = getModelForClass(User);
