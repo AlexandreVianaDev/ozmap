@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
-const pino = require("pino");
+import pino from "pino";
+
 const logger = pino({
   level: "info",
   transport: {

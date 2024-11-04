@@ -2,7 +2,8 @@ import { NextFunction, Request, Response } from "express";
 import { AppError } from "../error";
 import STATUS from "../constants/status";
 
-const pino = require("pino");
+import pino from "pino";
+
 const logger = pino({
   level: "info",
   transport: {
@@ -20,6 +21,8 @@ const errorHandlerMiddleware = (
   res: Response,
   next: NextFunction,
 ): any | void => {
+  logger.error(err);
+
   if (err instanceof AppError) {
     return res.status(err.statusCode).json({
       message: err.message,
@@ -28,7 +31,6 @@ const errorHandlerMiddleware = (
     });
   }
 
-  logger.error(err);
   return res
     .status(STATUS.INTERNAL_SERVER_ERROR)
     .json({ message: "Internal Server Error." });

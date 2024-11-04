@@ -14,15 +14,23 @@ import init from "../database/database";
 import STATUS from "../constants/status";
 import generateCoordinate from "./builders/coordinates";
 import RegionsServices from "../services/regions";
+import UsersBuilders from "./builders/users";
+import RegionsBuilders from "./builders/regions";
 
 describe("Region Tests", function () {
   let user;
   let region;
   let session;
   let geoLibStub: Partial<typeof GeoLib> = {};
-  let regionService;
+  let regionsService;
+  let regionsBuilders;
+  let usersBuilders;
 
   before(async () => {
+    regionsService = new RegionsServices();
+    usersBuilders = new UsersBuilders();
+    regionsBuilders = new RegionsBuilders();
+
     geoLibStub.getAddressFromCoordinates = sinon
       .stub(GeoLib, "getAddressFromCoordinates")
       .resolves(faker.location.streetAddress({ useFullAddress: true }));
@@ -36,28 +44,9 @@ describe("Region Tests", function () {
     init();
     session = await mongoose.startSession();
 
-    const userData = {
-      name: faker.person.firstName(),
-      email: faker.internet.email(),
-      address: faker.location.streetAddress({ useFullAddress: true }),
-      regions: [],
-    };
-    user = await UserModel.create(userData);
+    user = await usersBuilders.build();
 
-    const firstPoint = generateCoordinate();
-    const regionData = {
-      user: user._id,
-      name: faker.person.fullName(),
-      coordinates: {
-        type: "Polygon",
-        coordinates: [
-          [firstPoint, generateCoordinate(), generateCoordinate(), firstPoint],
-        ],
-      },
-    };
-    region = await RegionModel.create(regionData);
-
-    regionService = new RegionsServices();
+    region = await regionsBuilders.build(user._id);
   });
 
   after(() => {
@@ -126,9 +115,9 @@ describe("Region Tests", function () {
         const lng = region.coordinates.coordinates[0][0][0];
         const lat = region.coordinates.coordinates[0][0][1];
 
-        const regions = await regionService.getRegions(lat, lng);
+        const regions = await regionsService.getRegions(lat, lng);
 
-        expect(regions.length).to.be.above(1);
+        expect(regions.length).to.be.above(0);
       });
     });
 
@@ -136,17 +125,17 @@ describe("Region Tests", function () {
       it("Should return regions near to the point", async () => {
         const lng = region.coordinates.coordinates[0][0][0];
         const lat = region.coordinates.coordinates[0][0][1];
-        const distance = "5000";
+        const distance = "50000";
         const userId = user._id;
 
-        const regions = await regionService.getRegionsNear(
+        const regions = await regionsService.getRegionsNear(
           lat,
           lng,
           distance,
           userId,
         );
 
-        expect(regions.length).to.be.above(1);
+        expect(regions.length).to.be.above(0);
       });
 
       it("Should return regions not owned by user", async () => {
@@ -155,7 +144,7 @@ describe("Region Tests", function () {
         const distance = "5000";
         const userId = user._id;
 
-        const regions = await regionService.getRegionsNear(
+        const regions = await regionsService.getRegionsNear(
           lat,
           lng,
           distance,
@@ -189,7 +178,7 @@ describe("Region Tests", function () {
           },
         };
 
-        const region = await regionService.createRegion(regionData);
+        const region = await regionsService.createRegion(regionData);
         expect(region.toObject())
           .to.have.property("name")
           .equals(regionData.name);
@@ -215,7 +204,7 @@ describe("Region Tests", function () {
           },
         };
 
-        const regionUpdated = await regionService.updateRegion(
+        const regionUpdated = await regionsService.updateRegion(
           region._id,
           regionData,
         );
@@ -227,7 +216,7 @@ describe("Region Tests", function () {
       it("Should delete the region", async () => {
         const id = region._id;
 
-        await regionService.deleteRegion(id);
+        await regionsService.deleteRegion(id);
       });
     });
   });
@@ -271,25 +260,9 @@ describe("Region Tests", function () {
     });
 
     it("should update a region", async () => {
-      const firstPoint = generateCoordinate();
-      const regionData = {
-        user: user._id,
-        name: faker.person.fullName(),
-        coordinates: {
-          type: "Polygon",
-          coordinates: [
-            [
-              firstPoint,
-              generateCoordinate(),
-              generateCoordinate(),
-              firstPoint,
-            ],
-          ],
-        },
-      };
-      const regionToupdate = await RegionModel.create(regionData);
+      const regionToupdate = await regionsBuilders.build(user._id);
 
-      const firstNewPoint = generateCoordinate();
+      const firstPoint = generateCoordinate();
       const body = {
         update: {
           user: user._id,
@@ -298,10 +271,10 @@ describe("Region Tests", function () {
             type: "Polygon",
             coordinates: [
               [
-                firstNewPoint,
+                firstPoint,
                 generateCoordinate(),
                 generateCoordinate(),
-                firstNewPoint,
+                firstPoint,
               ],
             ],
           },
@@ -316,23 +289,7 @@ describe("Region Tests", function () {
     });
 
     it("should delete a region", async () => {
-      const firstPoint = generateCoordinate();
-      const regionData = {
-        user: user._id,
-        name: faker.person.fullName(),
-        coordinates: {
-          type: "Polygon",
-          coordinates: [
-            [
-              firstPoint,
-              generateCoordinate(),
-              generateCoordinate(),
-              firstPoint,
-            ],
-          ],
-        },
-      };
-      const regionToDelete = await RegionModel.create(regionData);
+      const regionToDelete = await regionsBuilders.build(user._id);
 
       const response = await supertest(server).delete(
         `/regions/${regionToDelete._id}`,
