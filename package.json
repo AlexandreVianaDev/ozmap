@@ -5,7 +5,24 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon --exec ts-node ./src/index.ts",
-    "test": "mocha --require ts-node/register ./src/**/*.spec.ts --exit"
+    "test": "mocha --require ts-node/register ./src/**/*.spec.ts --exit",
+    "test-coverage": "nyc yarn test"
+  },
+  "nyc": {
+    "reporter": [
+      "text",
+      "html"
+    ],
+    "exclude": [
+      "test/**",
+      "node_modules/**",
+      "coverage/**",
+      "nyc_output/**"
+    ],
+    "all": true,
+    "extension": [
+      ".ts"
+    ]
   },
   "author": "",
   "license": "ISC",
@@ -34,6 +51,7 @@
     "eslint": "^9.14.0",
     "mocha": "^10.2.0",
     "nodemon": "^3.1.7",
+    "nyc": "^17.1.0",
     "prettier": "^3.3.3",
     "sinon": "^16.0.0",
     "supertest": "^6.3.3",

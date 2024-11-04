@@ -111,7 +111,7 @@ describe("Region Tests", function () {
     });
 
     describe("getRegions", () => {
-      it("Should return regions with the point", async () => {
+      it("should return regions with the point", async () => {
         const lng = region.coordinates.coordinates[0][0][0];
         const lat = region.coordinates.coordinates[0][0][1];
 
@@ -122,7 +122,7 @@ describe("Region Tests", function () {
     });
 
     describe("getRegionsNear", () => {
-      it("Should return regions near to the point", async () => {
+      it("should return regions near to the point", async () => {
         const lng = region.coordinates.coordinates[0][0][0];
         const lat = region.coordinates.coordinates[0][0][1];
         const distance = "50000";
@@ -138,7 +138,7 @@ describe("Region Tests", function () {
         expect(regions.length).to.be.above(0);
       });
 
-      it("Should return regions not owned by user", async () => {
+      it("should return regions not owned by user", async () => {
         const lat = "10.0";
         const lng = "20.0";
         const distance = "5000";
@@ -160,7 +160,7 @@ describe("Region Tests", function () {
     });
 
     describe("createRegion", () => {
-      it("Should create new region", async () => {
+      it("should create new region", async () => {
         const firstPoint = generateCoordinate();
         const regionData = {
           user: user._id,
@@ -186,7 +186,7 @@ describe("Region Tests", function () {
     });
 
     describe("updateRegion", () => {
-      it("Should update the region", async () => {
+      it("should update the region", async () => {
         const firstPoint = generateCoordinate();
         const regionData = {
           user: user._id,
@@ -213,7 +213,7 @@ describe("Region Tests", function () {
     });
 
     describe("deleteRegion", () => {
-      it("Should delete the region", async () => {
+      it("should delete the region", async () => {
         const id = region._id;
 
         await regionsService.deleteRegion(id);
