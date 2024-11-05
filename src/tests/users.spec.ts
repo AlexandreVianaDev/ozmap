@@ -113,6 +113,28 @@ describe("Users Tests", function () {
       });
     });
 
+    describe("updateCompleteUser", () => {
+      it("should update and return the existing user", async () => {
+        const userToUpdate = await usersBuilders.build();
+        const userUpdateData = {
+          name: "Alexandre",
+          email: "alexandre@email.com",
+          address: "Rua dos bobos 0",
+        };
+        const userUpdated = await usersServices.updateCompleteUser(
+          userToUpdate._id,
+          userUpdateData,
+        );
+
+        const userDatabase = await UserModel.findOne({
+          _id: userToUpdate._id,
+        }).lean();
+
+        expect(userUpdated.name).to.equal(userDatabase.name);
+        expect(userUpdated.email).to.equal(userDatabase.email);
+      });
+    });
+
     describe("createUser", () => {
       it("should create and return the new user", async () => {
         const userData = {
@@ -161,7 +183,7 @@ describe("Users Tests", function () {
       expect(response).to.have.property("status", STATUS.OK);
     });
 
-    it("should update a user", async () => {
+    it("should complete update a user", async () => {
       const body = {
         update: {
           name: "Alexandre",
@@ -172,6 +194,22 @@ describe("Users Tests", function () {
 
       const response = await supertest(server)
         .put(`/users/${user._id}`)
+        .send(body);
+
+      expect(response).to.have.property("status", STATUS.UPDATED);
+    });
+
+    it("should update a user", async () => {
+      const body = {
+        update: {
+          name: "Alexandre",
+          email: "alexandre@mail.com",
+          address: "Rua dos bobos 0",
+        },
+      };
+
+      const response = await supertest(server)
+        .patch(`/users/${user._id}`)
         .send(body);
 
       expect(response).to.have.property("status", STATUS.UPDATED);

@@ -211,7 +211,7 @@ describe("Region Tests", function () {
       });
     });
 
-    describe("updateRegion", () => {
+    describe("updateCompleteRegion", () => {
       it("should complete update the region", async () => {
         const firstPoint = generateCoordinate();
         const regionData = {
