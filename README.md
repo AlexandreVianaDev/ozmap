@@ -150,6 +150,8 @@ Sem body
 
 Sem body
 
+Se passar user na url como query params as regiões do usuário serão ignoradas
+
 ### PATCH /regions - Atualizar região
 
 Exemplo de body, sendo o envio do user obrigatório:
