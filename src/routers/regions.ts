@@ -31,7 +31,7 @@ regionsRouters.get(
 
 regionsRouters.post(
   "/regions",
-  requestMiddlewares.validateBodyMiddleware(regionCompleteUpdateSchema),
+  requestMiddlewares.validateBodyMiddleware(regionCreateSchema),
   usersMiddlewares.userExists,
   regionsControllers.createRegion,
 );
@@ -46,7 +46,7 @@ regionsRouters.patch(
 
 regionsRouters.put(
   "/regions/:id",
-  requestMiddlewares.validateBodyMiddleware(regionUpdateSchema),
+  requestMiddlewares.validateBodyMiddleware(regionCompleteUpdateSchema),
   usersMiddlewares.userExists,
   regionsMiddlewares.regionExists,
   regionsControllers.updateCompleteRegion,
