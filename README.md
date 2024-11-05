@@ -56,26 +56,31 @@ yarn test-coverage
 ### POST /users - Criar usuário
 
 Exemplos de body:
+
+```
 {
-"create" : {
-"name": "Alexandre",
-"email": "alexandre@mail.com",
-"address": "Empire State Building, 350 5th Ave, New York, NY 10118, United States"
+  "create" : {
+    "name": "Alexandre",
+    "email": "alexandre@mail.com",
+    "address": "Empire State Building, 350 5th Ave, New York, NY 10118, United States"
+  }
 }
-}
+```
 
 ou
 
+```
 {
-"create" : {
-"name": "Alexandre",
-"email": "alexandre@mail.com",
-"coordinates": [
--73.98565890160751,
-40.74844205
-]
+  "create" : {
+    "name": "Alexandre",
+    "email": "alexandre@mail.com",
+    "coordinates": [
+      -73.98565890160751,
+      40.74844205
+    ]
+  }
 }
-}
+```
 
 ### GET /users ou /users?page=2&limit=1 - Buscar usuários
 
