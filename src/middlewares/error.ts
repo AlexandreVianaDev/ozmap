@@ -33,7 +33,7 @@ const errorHandlerMiddleware = (
 
   return res
     .status(STATUS.INTERNAL_SERVER_ERROR)
-    .json({ message: "Internal Server Error." });
+    .json({ message: "Internal Server Error.", details: err });
 };
 
 export default errorHandlerMiddleware;
