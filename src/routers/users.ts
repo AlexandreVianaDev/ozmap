@@ -2,7 +2,11 @@ import * as app from "express";
 import UsersControllers from "../controllers/users";
 import UsersMiddlewares from "../middlewares/users";
 import RequestsMiddlewares from "../middlewares/requests";
-import { userCreateSchema, userUpdateSchema } from "../schemas/users";
+import {
+  userCreateSchema,
+  userUpdateCompleteSchema,
+  userUpdateSchema,
+} from "../schemas/users";
 
 const userRouters = app.Router();
 const usersControllers = new UsersControllers();
@@ -24,9 +28,16 @@ userRouters.post(
   usersControllers.createUser,
 );
 
-userRouters.put(
+userRouters.patch(
   "/users/:id",
   requestMiddlewares.validateBodyMiddleware(userUpdateSchema),
+  usersMiddlewares.userExists,
+  usersControllers.updateUser,
+);
+
+userRouters.put(
+  "/users/:id",
+  requestMiddlewares.validateBodyMiddleware(userUpdateCompleteSchema),
   usersMiddlewares.userExists,
   usersMiddlewares.userAddressOrCoordinates,
   usersControllers.updateUser,

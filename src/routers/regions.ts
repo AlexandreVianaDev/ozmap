@@ -22,6 +22,7 @@ regionsRouters.get(
   requestMiddlewares.validateQueryParamsMiddleware(regionGetSchema),
   regionsControllers.getRegions,
 );
+
 regionsRouters.get(
   "/regions/near",
   requestMiddlewares.validateQueryParamsMiddleware(regionGetNearSchema),
@@ -34,6 +35,7 @@ regionsRouters.post(
   usersMiddlewares.userExists,
   regionsControllers.createRegion,
 );
+
 regionsRouters.patch(
   "/regions/:id",
   requestMiddlewares.validateBodyMiddleware(regionUpdateSchema),
@@ -41,6 +43,7 @@ regionsRouters.patch(
   regionsMiddlewares.regionExists,
   regionsControllers.updateRegion,
 );
+
 regionsRouters.put(
   "/regions/:id",
   requestMiddlewares.validateBodyMiddleware(regionUpdateSchema),
@@ -48,6 +51,7 @@ regionsRouters.put(
   regionsMiddlewares.regionExists,
   regionsControllers.updateCompleteRegion,
 );
+
 regionsRouters.delete(
   "/regions/:id",
   regionsMiddlewares.regionExists,

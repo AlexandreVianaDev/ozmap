@@ -24,12 +24,27 @@ class UsersServices {
     return user;
   };
 
-  public updateUser = async (id: string, update: IUser) => {
+  public updateCompleteUser = async (id: string, update: IUser) => {
     const user = await UserModel.findOne({ _id: id });
 
     if (user) {
       user.name = update.name;
       user.email = update.email;
+      user.address = update.address;
+      user.coordinates = update.coordinates;
+
+      await user.save();
+    }
+
+    return user.toObject();
+  };
+
+  public updateUser = async (id: string, update: IUser) => {
+    const user = await UserModel.findOne({ _id: id });
+
+    if (user) {
+      if (update.name) user.name = update.name;
+      if (update.email) user.email = update.email;
       if (update.address) user.address = update.address;
       if (update.coordinates) user.coordinates = update.coordinates;
 

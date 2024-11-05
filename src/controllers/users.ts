@@ -29,6 +29,21 @@ class UsersControllers {
     });
   };
 
+  public updateCompleteUser = async (
+    req: Request,
+    res: Response,
+  ): Promise<void> => {
+    const { id } = req.params;
+    const { update } = req.body;
+
+    const user = await this.userServices.updateCompleteUser(id, update);
+
+    res.status(STATUS.UPDATED).json({
+      success: true,
+      user: user,
+    });
+  };
+
   public updateUser = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
     const { update } = req.body;

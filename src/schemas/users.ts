@@ -14,7 +14,7 @@ export const userCreateSchema = z.object({
     }),
 });
 
-export const userUpdateSchema = z.object({
+export const userUpdateCompleteSchema = z.object({
   update: z
     .object({
       name: z.string(),
@@ -26,4 +26,13 @@ export const userUpdateSchema = z.object({
       message: "Forneça pelo menos um dos campos: address ou coordinates",
       path: ["address", "coordinates"],
     }),
+});
+
+export const userUpdateSchema = z.object({
+  update: z.object({
+    name: z.string().optional(),
+    email: z.string().email().optional(),
+    address: z.string().optional(),
+    coordinates: z.array(z.number()).optional(),
+  }),
 });

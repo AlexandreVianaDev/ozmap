@@ -150,6 +150,30 @@ Sem body
 
 Sem body
 
+### PATCH /regions - Atualizar região
+
+Exemplo de body, sendo o envio do user obrigatório:
+
+```
+{
+  "update": {
+    "name": "Region 1",
+    "user": "6727be1d8cb2649019e05547",
+    "coordinates": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [-41.000, -28.000],
+          [-41.002, -28.001],
+          [-41.001, -28.004],
+          [-41.000, -28.000]
+        ]
+      ]
+    }
+  }
+}
+```
+
 ### PUT /regions - Atualizar região completa
 
 Exemplo de body:
