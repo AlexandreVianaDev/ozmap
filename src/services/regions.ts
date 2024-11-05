@@ -57,11 +57,24 @@ class RegionsServices {
     return savedRegion;
   };
 
-  public updateRegion = async (id: string, update: IRegion) => {
+  public updateCompleteRegion = async (id: string, update: IRegion) => {
     const region = await RegionModel.findOne({ _id: id });
 
     if (region) {
       region.name = update.name;
+      region.coordinates = update.coordinates;
+
+      await region.save();
+    }
+
+    return region.toObject();
+  };
+
+  public updateRegion = async (id: string, update: IRegion) => {
+    const region = await RegionModel.findOne({ _id: id });
+
+    if (region) {
+      if (update.name) region.name = update.name;
       if (update.coordinates) region.coordinates = update.coordinates;
 
       await region.save();

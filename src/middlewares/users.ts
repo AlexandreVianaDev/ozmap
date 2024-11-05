@@ -14,7 +14,7 @@ class UsersMiddlewares {
     const domain = req.url.split("/")[1];
 
     if (domain == "users") {
-      const methodsWithUserAsParams = ["GET", "DELETE", "PUT"];
+      const methodsWithUserAsParams = ["GET", "DELETE", "PUT", "PATCH"];
       if (methodsWithUserAsParams.includes(req.method)) {
         id = req.params.id;
       }
@@ -34,7 +34,7 @@ class UsersMiddlewares {
         id = req.body.create.user;
       }
 
-      if (req.method == "PUT") {
+      if (req.method == "PUT" || req.method == "PATCH") {
         id = req.body.update.user;
       }
     }

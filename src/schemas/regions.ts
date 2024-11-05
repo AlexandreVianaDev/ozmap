@@ -11,7 +11,7 @@ export const regionCreateSchema = z.object({
   }),
 });
 
-export const regionUpdateSchema = z.object({
+export const regionCompleteUpdateSchema = z.object({
   update: z.object({
     name: z.string(),
     user: z.string(),
@@ -20,6 +20,10 @@ export const regionUpdateSchema = z.object({
       coordinates: z.array(z.array(z.array(z.number()))),
     }),
   }),
+});
+
+export const regionUpdateSchema = regionCompleteUpdateSchema.extend({
+  update: regionCompleteUpdateSchema.shape.update.partial(),
 });
 
 export const regionGetNearSchema = z.object({

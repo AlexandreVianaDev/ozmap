@@ -4,6 +4,7 @@ import UsersMiddlewares from "../middlewares/users";
 import RegionsMiddlewares from "../middlewares/regions";
 import RequestsMiddlewares from "../middlewares/requests";
 import {
+  regionCompleteUpdateSchema,
   regionCreateSchema,
   regionGetNearSchema,
   regionGetSchema,
@@ -29,16 +30,23 @@ regionsRouters.get(
 
 regionsRouters.post(
   "/regions",
-  requestMiddlewares.validateBodyMiddleware(regionCreateSchema),
+  requestMiddlewares.validateBodyMiddleware(regionCompleteUpdateSchema),
   usersMiddlewares.userExists,
   regionsControllers.createRegion,
+);
+regionsRouters.patch(
+  "/regions/:id",
+  requestMiddlewares.validateBodyMiddleware(regionUpdateSchema),
+  usersMiddlewares.userExists,
+  regionsMiddlewares.regionExists,
+  regionsControllers.updateRegion,
 );
 regionsRouters.put(
   "/regions/:id",
   requestMiddlewares.validateBodyMiddleware(regionUpdateSchema),
   usersMiddlewares.userExists,
   regionsMiddlewares.regionExists,
-  regionsControllers.updateRegion,
+  regionsControllers.updateCompleteRegion,
 );
 regionsRouters.delete(
   "/regions/:id",

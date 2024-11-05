@@ -62,6 +62,21 @@ class RegionsControllers {
     });
   };
 
+  public updateCompleteRegion = async (
+    req: Request,
+    res: Response,
+  ): Promise<void> => {
+    const { id } = req.params;
+    const { update } = req.body;
+
+    const region = await this.regionsServices.updateCompleteRegion(id, update);
+
+    res.status(STATUS.UPDATED).json({
+      success: true,
+      region: region,
+    });
+  };
+
   public deleteRegion = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
 
