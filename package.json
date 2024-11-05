@@ -4,31 +4,58 @@
   "description": "DevOZ - Tech test",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon index.ts",
-    "test": "mocha --require ts-node/register ./src/**/*.spec.ts --exit"
+    "dev": "nodemon --exec ts-node ./src/index.ts",
+    "test": "mocha --require ts-node/register ./src/**/*.spec.ts --exit",
+    "test-coverage": "nyc yarn test"
+  },
+  "nyc": {
+    "reporter": [
+      "text",
+      "html"
+    ],
+    "exclude": [
+      "test/**",
+      "node_modules/**",
+      "coverage/**",
+      "nyc_output/**"
+    ],
+    "all": true,
+    "extension": [
+      ".ts"
+    ]
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@faker-js/faker": "^8.1.0",
     "@typegoose/typegoose": "^11.5.0",
+    "axios": "^1.7.7",
     "chai": "^4.3.10",
-    "express": "^4.18.2",
-    "mongoose": "^7.5.3"
+    "express": "^4.21.1",
+    "express-async-errors": "^3.1.1",
+    "mongoose": "^8.8.0",
+    "pino": "^9.5.0",
+    "pino-http": "^10.3.0",
+    "pino-pretty": "^11.3.0",
+    "reflect-metadata": "^0.2.2",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/chai": "^4.3.6",
-    "@types/express": "^4.17.18",
+    "@types/express": "^5.0.0",
     "@types/mocha": "^10.0.2",
-    "@types/node": "^20.8.0",
+    "@types/node": "^22.8.6",
     "@types/reflect-metadata": "^0.1.0",
     "@types/sinon": "^10.0.17",
     "@types/supertest": "^2.0.13",
+    "eslint": "^9.14.0",
     "mocha": "^10.2.0",
-    "nodemon": "^3.0.1",
+    "nodemon": "^3.1.7",
+    "nyc": "^17.1.0",
+    "prettier": "^3.3.3",
     "sinon": "^16.0.0",
     "supertest": "^6.3.3",
-    "ts-node": "^10.9.1",
-    "typescript": "^5.2.2"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3"
   }
 }
