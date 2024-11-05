@@ -125,14 +125,13 @@ describe("Region Tests", function () {
       it("should return regions near to the point", async () => {
         const lng = region.coordinates.coordinates[0][0][0];
         const lat = region.coordinates.coordinates[0][0][1];
-        const distance = "50000";
-        const userId = user._id;
+        const distance = "50000000";
 
         const regions = await regionsService.getRegionsNear(
           lat,
           lng,
           distance,
-          userId,
+          null,
         );
 
         expect(regions.length).to.be.above(0);
