@@ -308,6 +308,35 @@ describe("Region Tests", function () {
       };
 
       const response = await supertest(server)
+        .patch(`/regions/${regionToupdate._id}`)
+        .send(body);
+
+      expect(response).to.have.property("status", STATUS.UPDATED);
+    });
+
+    it("should complete update a region", async () => {
+      const regionToupdate = await regionsBuilders.build(user._id);
+
+      const firstPoint = generateCoordinate();
+      const body = {
+        update: {
+          user: user._id,
+          name: "Region 1",
+          coordinates: {
+            type: "Polygon",
+            coordinates: [
+              [
+                firstPoint,
+                generateCoordinate(),
+                generateCoordinate(),
+                firstPoint,
+              ],
+            ],
+          },
+        },
+      };
+
+      const response = await supertest(server)
         .put(`/regions/${regionToupdate._id}`)
         .send(body);
 
