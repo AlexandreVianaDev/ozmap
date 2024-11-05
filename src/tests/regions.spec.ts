@@ -211,6 +211,33 @@ describe("Region Tests", function () {
       });
     });
 
+    describe("updateRegion", () => {
+      it("should complete update the region", async () => {
+        const firstPoint = generateCoordinate();
+        const regionData = {
+          user: user._id,
+          name: faker.person.fullName(),
+          coordinates: {
+            type: "Polygon",
+            coordinates: [
+              [
+                firstPoint,
+                generateCoordinate(),
+                generateCoordinate(),
+                firstPoint,
+              ],
+            ],
+          },
+        };
+
+        const regionUpdated = await regionsService.updateCompleteRegion(
+          region._id,
+          regionData,
+        );
+        expect(regionUpdated.name).to.equal(regionData.name);
+      });
+    });
+
     describe("deleteRegion", () => {
       it("should delete the region", async () => {
         const id = region._id;
