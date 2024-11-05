@@ -8,7 +8,7 @@ class RegionsMiddlewares {
     req: Request,
     res: Response,
     next: NextFunction,
-  ): Promise<any> => {
+  ): Promise<void> => {
     let { id } = req.params;
 
     const region = await RegionModel.findOne({ _id: id });

@@ -8,7 +8,7 @@ class UsersMiddlewares {
     req: Request,
     res: Response,
     next: NextFunction,
-  ): Promise<any> => {
+  ): Promise<void> => {
     let id: string;
 
     const domain = req.url.split("/")[1];

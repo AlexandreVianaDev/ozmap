@@ -29,7 +29,7 @@ class UsersControllers {
     });
   };
 
-  public updateUser = async (req: Request, res: Response): Promise<any> => {
+  public updateUser = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
     const { update } = req.body;
 
@@ -41,22 +41,22 @@ class UsersControllers {
     });
   };
 
-  public createUser = async (req: Request, res: Response): Promise<any> => {
+  public createUser = async (req: Request, res: Response): Promise<void> => {
     const { create } = req.body;
 
     const user = await this.userServices.createUser(create);
 
-    return res.status(STATUS.CREATED).json({
+    res.status(STATUS.CREATED).json({
       user: user,
     });
   };
 
-  public deleteUser = async (req: Request, res: Response): Promise<any> => {
+  public deleteUser = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
 
     await this.userServices.deleteUser(id);
 
-    return res.status(STATUS.OK).json({
+    res.status(STATUS.OK).json({
       success: true,
     });
   };

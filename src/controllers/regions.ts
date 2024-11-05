@@ -9,7 +9,7 @@ class RegionsControllers {
   public getRegions = async (
     req: Request<IGetRegions>,
     res: Response,
-  ): Promise<any> => {
+  ): Promise<void> => {
     const { lng, lat } = req.query;
 
     const regions = await this.regionsServices.getRegions(
@@ -17,7 +17,7 @@ class RegionsControllers {
       lng as string,
     );
 
-    return res.status(STATUS.OK).json({
+    res.status(STATUS.OK).json({
       regions: regions,
     });
   };
@@ -25,7 +25,7 @@ class RegionsControllers {
   public getRegionsNear = async (
     req: Request<IGetRegions>,
     res: Response,
-  ): Promise<any> => {
+  ): Promise<void> => {
     const { lat, lng, distance, user } = req.query;
 
     const regions = await this.regionsServices.getRegionsNear(
@@ -35,39 +35,39 @@ class RegionsControllers {
       user as string,
     );
 
-    return res.status(STATUS.OK).json({
+    res.status(STATUS.OK).json({
       regions: regions,
     });
   };
 
-  public createRegion = async (req: Request, res: Response): Promise<any> => {
+  public createRegion = async (req: Request, res: Response): Promise<void> => {
     const { create } = req.body;
 
     const region = await this.regionsServices.createRegion(create);
 
-    return res.status(STATUS.CREATED).json({
+    res.status(STATUS.CREATED).json({
       region: region,
     });
   };
 
-  public updateRegion = async (req: Request, res: Response): Promise<any> => {
+  public updateRegion = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
     const { update } = req.body;
 
     const region = await this.regionsServices.updateRegion(id, update);
 
-    return res.status(STATUS.UPDATED).json({
+    res.status(STATUS.UPDATED).json({
       success: true,
       region: region,
     });
   };
 
-  public deleteRegion = async (req: Request, res: Response): Promise<any> => {
+  public deleteRegion = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
 
     await this.regionsServices.deleteRegion(id);
 
-    return res.status(STATUS.OK).json({
+    res.status(STATUS.OK).json({
       success: true,
     });
   };
